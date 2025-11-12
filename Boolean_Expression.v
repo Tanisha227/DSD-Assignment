@@ -1,7 +1,5 @@
 `timescale 1ns / 1ps
 
-
-
 module Boolean_Expression(
     input a, b,
     output y
