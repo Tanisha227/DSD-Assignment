@@ -1,6 +1,8 @@
 TANISHA KUMARI MEENA, 
 24293916110,
-2nd year, sem-3, CSE-A
+CSE-A,
+2nd Year, 
+SEM-3
 
 The following are the practicals performed in Verilog:
 ________________________________________________________________________________________________________________________________________
