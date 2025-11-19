@@ -795,3 +795,202 @@ Schematic:
 Simulation:
 ![WhatsApp Image 2025-11-17 at 10 29 31_48d1d7c2](https://github.com/user-attachments/assets/a229e43e-92ee-44ca-8936-c08e422e36c5)
 ________________________________________________________________________________________________________________________________________________
+<h4>15. Universal Adder / Subtractor with Overflow Check:</h4>
+
+<h5>Code:</h5>
+<h5>Design source file code:</h5>
+
+<pre>`timescale 1ns / 1ps
+
+
+module universal_adder_subtractor(
+input A0, A1, A2, A3, B0, B1, B2, B3, M,
+output C4, S0, S1, S2, S3,V
+    );
+    assign C0= M;
+    assign S0= A0 ^ (B0 ^ M) ^ C0;
+    assign C1= (A0 & (B0 ^ M)) | (C0 & (A0 ^ (B0 ^ M)));
+    
+    assign S1= A1 ^ (B1 ^ M) ^ C1;
+    assign C2= (A1 & (B1 ^ M)) | (C1 & (A1 ^ (B1 ^ M)));
+    
+    assign S2= A2 ^ (B2 ^ M) ^ C2;
+    assign C3= (A2 & (B2 ^ M)) | (C2 & (A2 ^ (B2 ^ M)));
+    
+    assign S3= A3 ^ (B3 ^ M) ^ C3;
+    assign C4= (A3 & (B3 ^ M)) | (C3 & (A3 ^ (B3 ^ M)));
+    
+    assign V= C3 ^ C4;
+endmodule
+</pre>
+
+<h5>Test bench file code:</h5>
+
+<pre>`timescale 1ns / 1ps
+
+
+module tb_universal_adder_subtractor(
+
+    );
+reg A0, A1, A2, A3, B0, B1, B2, B3, M;
+wire C4, S0, S1, S2, S3,V;
+
+universal_adder_subtractor uut(A0, A1, A2, A3, B0, B1, B2, B3, M,C4, S0, S1, S2, S3,V);
+
+initial begin
+// ADD: 9 and 10 [1001 + 1010]
+A3=1; A2=0; A1=0; A0=1; 
+B3=1; B2=0; B1=1; B0=0; 
+M=0;
+#10
+
+// SUBTRACT: 10 from 9 [1001- 1010]
+A3=1; A2=0; A1=0; A0=1; 
+B3=1; B2=0; B1=1; B0=0; 
+M=1;
+#10
+$finish;
+
+end
+endmodule
+</pre>
+
+Schematic:
+![WhatsApp Image 2025-11-18 at 23 01 01_68606018](https://github.com/user-attachments/assets/67e5fb1a-c9f5-4957-bf57-3e625fbfe480)
+
+Simulation:
+![WhatsApp Image 2025-11-18 at 22 59 38_9d1d4967](https://github.com/user-attachments/assets/9814d178-a66b-4111-b4ab-2434a2fd91e4)
+________________________________________________________________________________________________________________________________________
+
+<h4>16. JK Flip Flop:</h4>
+
+<h5>Code:</h5>
+<h5>Design source file code:</h5>
+
+<pre>`timescale 1ns / 1ps 
+
+//Positive edge triggered JK Flip Flop
+
+module jk_ff( 
+input  J, K, CLK, 
+output reg Q, 
+output Qbar 
+); 
+
+
+assign Qbar = ~Q;
+
+always @(posedge CLK) begin
+     case ({J, K}) 
+     2'b10: Q <= 1'b1;   // Set
+     2'b01: Q <= 1'b0;   // Reset
+     2'b00: Q <= Q;      // No change 
+     2'b11: Q <= Qbar;   // Toggle 
+endcase
+end
+
+
+endmodule</pre>
+
+<h5>Test bench file code:</h5>
+
+<pre>`timescale 1ns / 1ps 
+
+module tb_jk_ff( 
+); 
+reg J, K, CLK; 
+wire Q, Qbar; 
+
+jk_ff uut (J,K,CLK,Q,Qbar); 
+
+initial begin 
+CLK = 0; 
+forever #5 CLK = ~CLK; 
+end 
+
+initial begin  
+J = 0; K = 0;   
+#12;           
+J = 0; K = 1;   
+#10; 
+J = 0; K = 0;   
+#10; 
+J = 1; K = 0;   
+#10; 
+J = 0; K = 0;   
+#10; 
+J = 1; K = 1;   
+#10; 
+$finish; 
+end 
+
+endmodule</pre>
+
+Schematic:
+![WhatsApp Image 2025-11-19 at 00 57 47_4d73369b](https://github.com/user-attachments/assets/99c44e88-a5ef-411a-b209-b73365106a37)
+
+Simulation:
+![WhatsApp Image 2025-11-19 at 00 56 39_072380e3](https://github.com/user-attachments/assets/24734caf-f3f6-474c-87c4-e0056747d387)
+________________________________________________________________________________________________________________________________________________
+
+<h4>17. T Flip Flop:</h4>
+
+<h5>Code:</h5>
+<h5>Design source file code:</h5>
+
+<pre>`timescale 1ns / 1ps 
+ 
+//Positive edge triggered T Flip Flop
+
+module t_ff( 
+input  T, CLK, 
+output reg Q, 
+output Qbar 
+); 
+
+
+assign Qbar = ~Q;
+initial Q=0;
+
+always @(posedge CLK) begin
+   case ({T}) 
+     1'b1: Q <= Qbar;   // Toggle
+     1'b0: Q <= Q;   // Hold
+endcase
+end
+
+
+endmodule</pre>
+
+<h5>Test bench file code:</h5>
+
+<pre>`timescale 1ns / 1ps 
+
+module tb_t_ff( 
+); 
+reg  T, CLK;  
+wire Q, Qbar; 
+
+t_ff uut (T,CLK,Q,Qbar); 
+
+initial begin 
+CLK = 0; 
+forever #5 CLK = ~CLK; 
+end 
+
+initial begin 
+T = 0;  #10;            
+T = 1;  #10; 
+T = 0;  #10;            
+T = 1;  #10;
+$finish; 
+end 
+
+endmodule</pre>
+
+Schematic:
+![WhatsApp Image 2025-11-19 at 01 22 29_13df9004](https://github.com/user-attachments/assets/90585adf-e0c3-4791-8d12-cd4f70157859)
+
+Simulation:
+![WhatsApp Image 2025-11-19 at 01 16 17_85f0dc64](https://github.com/user-attachments/assets/99bb42ea-ccbb-4ebe-a7bb-adf147f89d14)
+________________________________________________________________________________________________________________________________________________
